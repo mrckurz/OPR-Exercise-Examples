@@ -1,6 +1,6 @@
 # OPR – Exercise Examples
 
-Dieses Repository enthält Beispiele zur Lehrveranstaltung **Objektorientierte Programmierung (OPR)** am Studiengang **Mobile Computing** der **FH Oberösterreich – Campus Hagenberg**.
+Dieses Repository enthält Beispiele zur Lehrveranstaltung **Objektorientierte Programmierung (OPR)** am Studiengang **Mobile Computing** der **FH Oberösterreich – Campus Hagenberg**. Die Beispiele begleiten die wöchentlichen Übungen und sollen dir helfen, die jeweiligen Sprachfeatures an einer kleinen, gut nachvollziehbaren Domäne zu sehen, bevor du sie in deiner Hausübung anwendest.
 
 ## Lehrveranstaltung
 
@@ -11,7 +11,7 @@ Dieses Repository enthält Beispiele zur Lehrveranstaltung **Objektorientierte P
 
 ## Aufbau des Repositories
 
-In diesem Repository werden verschiedene Beispiele und Übungen zur Lehrveranstaltung bereitgestellt. Jedes Beispiel liegt auf einem eigenen **Branch**, damit die Beispiele klar voneinander getrennt sind und bei Bedarf gezielt ausgecheckt werden können.
+Jedes Beispiel liegt auf einem eigenen **Branch**, damit die Beispiele klar voneinander getrennt sind und du gezielt das Beispiel zu einer bestimmten Übung auschecken kannst.
 
 ### Verfügbare Branches
 
@@ -26,7 +26,7 @@ Weitere Beispiele werden im Laufe der Lehrveranstaltung auf zusätzlichen Branch
 
 ## Nutzung
 
-Um ein bestimmtes Beispiel auszuchecken:
+So checkst du ein bestimmtes Beispiel aus:
 
 ```bash
 git clone https://github.com/mrckurz/OPR-Exercise-Examples.git
@@ -34,4 +34,4 @@ cd OPR-Exercise-Examples
 git checkout <branch-name>
 ```
 
-Im jeweiligen Branch befindet sich ein eigenes README, das das Beispiel und den Lerneffekt näher beschreibt.
+Im jeweiligen Branch findest du ein eigenes README, das das Beispiel und die Lernziele näher beschreibt.
