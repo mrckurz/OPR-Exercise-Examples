@@ -20,6 +20,7 @@ In diesem Repository werden verschiedene Beispiele und Übungen zur Lehrveransta
 | `main` | Übersicht und allgemeine Informationen zum Repository (dieses README) | – |
 | `exception-example` | Einführungsbeispiel zu Exceptions und der Definition eigener Exception-Klassen | UE06 |
 | `generics-example` | Generics, Bounded Type Parameter (`<T extends Comparable<T>>`), generisches Interface und innere Klasse mit generischem Typ – illustriert am Beispiel `Pair<T>` | UE07 |
+| `lambda-example` | Lambda-Ausdrücke und funktionale Interfaces (`Predicate`, `Function`, `Comparator`, `Consumer`) sowie der Vergleich einer schleifenbasierten und einer Streams-API-basierten Implementierung – illustriert am Beispiel `Book` / `BookProcessor` | UE08 |
 
 Weitere Beispiele werden im Laufe der Lehrveranstaltung auf zusätzlichen Branches ergänzt.
 
