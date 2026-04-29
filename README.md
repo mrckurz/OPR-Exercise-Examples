@@ -27,19 +27,19 @@ In [`App.java`](src/App.java) werden die Fehlerfälle bewusst provoziert (zwei P
 | [src/StackEmptyException.java](src/StackEmptyException.java) | Eigene geprüfte Exception mit zusätzlichem `status`-Feld und Getter. |
 | [src/App.java](src/App.java) | `main`-Methode mit `try/catch`-Blöcken, die die Exceptions auslösen und behandeln. |
 
-## Lerneffekt
+## Lernziele
 
-Nach Durcharbeiten dieses Beispiels sollen die Studierenden:
+Wenn du dieses Beispiel durchgearbeitet hast, kannst du:
 
-1. den **Unterschied zwischen geprüften (`checked`) und ungeprüften (`unchecked`) Exceptions** kennen und wissen, warum hier `extends Exception` (checked) gewählt wurde.
-2. **eigene Exception-Klassen** definieren können, inklusive:
+1. den **Unterschied zwischen geprüften (`checked`) und ungeprüften (`unchecked`) Exceptions** erklären und nachvollziehen, warum hier `extends Exception` (checked) gewählt wurde.
+2. **eigene Exception-Klassen** definieren, inklusive:
    - Vererbung von `Exception` (bzw. `RuntimeException`),
    - Weitergabe einer Fehlermeldung an den Superkonstruktor (`super(msg)`),
    - Ergänzung um **Zusatzattribute** (wie `status` in `StackEmptyException`), um Kontextinformationen zum Fehler weiterzureichen.
 3. das **`throws`-Schlüsselwort** in Methodensignaturen korrekt einsetzen, um geprüfte Exceptions zu propagieren.
 4. das **`throw`-Schlüsselwort** verwenden, um in einer konkreten Fehlersituation eine Exception auszulösen.
 5. **`try/catch`-Blöcke** sinnvoll strukturieren und Exceptions gezielt auffangen, auswerten (`getMessage()`, eigene Getter wie `getStatus()`) und darauf reagieren.
-6. verstehen, **warum Exceptions besser sind als Fehlercodes**: klare Trennung von „Normalfall“ und „Fehlerfall“, keine vergessene Fehlerprüfung, bessere Lesbarkeit und Wartbarkeit.
+6. begründen, **warum Exceptions besser sind als Fehlercodes**: klare Trennung von „Normalfall“ und „Fehlerfall“, keine vergessene Fehlerprüfung, bessere Lesbarkeit und Wartbarkeit.
 
 ## Ausführen
 
@@ -63,9 +63,9 @@ Stack is empty: 2
 
 (Der Stack hat Kapazität 2. `push(1)` gelingt, `push(2)` würde ebenfalls gelingen – je nach `maxSize` kann hier die `StackFullException` ausgelöst werden; das dritte `pop` führt schließlich zur `StackEmptyException`, deren Statuswert zusätzlich ausgegeben wird.)
 
-## Übungsvorschläge
+## Aufgaben zum Vertiefen
 
 - Erweitere `Stack` um eine generische Variante `Stack<T>`, sodass beliebige Objekte gespeichert werden können.
 - Füge eine `StackException` als **gemeinsame Oberklasse** für `StackFullException` und `StackEmptyException` ein und fange beide Fehler mit einem einzigen `catch`-Block ab.
-- Überlege, in welchen Fällen eine **`RuntimeException`** (unchecked) die bessere Wahl wäre und diskutiere die Vor- und Nachteile.
+- Überlege, in welchen Fällen eine **`RuntimeException`** (unchecked) die bessere Wahl wäre, und nenne Vor- und Nachteile.
 - Nutze `try`-with-resources oder `finally`, um z. B. Logging konsistent durchzuführen.
