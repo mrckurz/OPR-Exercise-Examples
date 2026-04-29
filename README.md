@@ -2,7 +2,7 @@
 
 Dieses Beispiel gehört zur Lehrveranstaltung **Objektorientierte Programmierung (OPR)** am Studiengang **Mobile Computing** der **FH OÖ – Campus Hagenberg** (LV-Leitung: FH-Prof. Dr. Marc Kurz).
 
-Es dient als **begleitendes Live-Coding-Beispiel zu Übung 8** (Lambda-Ausdrücke, funktionale Interfaces, Streams API) und zeigt dieselben Konzepte an einer deutlich kleineren Domäne als der Backblaze-Festplatten-Datensatz – damit der Transfer zur Hausübung von den Studierenden selbst geleistet wird.
+Es ergänzt **Übung 8** (Lambda-Ausdrücke, funktionale Interfaces, Streams API) mit einer deutlich kleineren Domäne als der Backblaze-Festplatten-Datensatz aus der Hausübung. Du siehst die zentralen Sprachfeatures hier in einer überschaubaren Form und kannst das Muster anschließend auf die Hausübung übertragen.
 
 ## Worum geht es?
 
@@ -17,27 +17,27 @@ Als Anwendungsdomäne wird eine sehr einfache Klasse **`Book`** verwendet (Titel
 | `countDistinctStrings(Function<Book, String>)` | `Function<T, R>` | „Welcher String soll gruppiert werden?" |
 | `forEach(Consumer<Book>)` | `Consumer<T>` | „Was tue ich mit jedem Buch?" |
 
-Das Interface `BookProcessor` wird **zwei Mal implementiert** – exakt das Muster, das in der Hausübung für `DataProcessorManual` und `DataProcessorStreams` gefordert wird:
+Das Interface `BookProcessor` wird **zwei Mal implementiert** – nach demselben Muster, das in der Hausübung für `DataProcessorManual` und `DataProcessorStreams` gefordert ist:
 
 - **`BookProcessorManual`** – klassisch mit `for`-Schleifen.
 - **`BookProcessorStreams`** – mit der Streams-API (`stream().filter(...).max(...).mapToLong(...).count()` …).
 
-Beide Implementierungen liefern in `App.java` exakt dieselbe Ausgabe; die Studierenden sehen damit unmittelbar, dass die funktionale Schreibweise eine *andere Form*, aber kein *anderes Ergebnis* produziert.
+Beide Implementierungen liefern in `App.java` exakt dieselbe Ausgabe. Das ist der zentrale Beweis dafür, dass die funktionale Schreibweise eine *andere Form*, aber kein *anderes Ergebnis* produziert.
 
 ## Lernziele
 
-Nach Durcharbeiten dieses Beispiels sollen die Studierenden:
+Wenn du dieses Beispiel durchgearbeitet hast, kannst du:
 
-1. die **Grundsyntax von Lambda-Ausdrücken** kennen (`b -> b.getPrice() > 20`, `(a, b) -> a.getPages() - b.getPages()`, Block-Body mit `{ ... return ...; }`).
-2. die vier wichtigsten **funktionalen Interfaces** aus `java.util.function` (sowie `java.util.Comparator`) sicher unterscheiden können:
+1. die **Grundsyntax von Lambda-Ausdrücken** anwenden (`b -> b.getPrice() > 20`, `(a, b) -> a.getPages() - b.getPages()`, Block-Body mit `{ ... return ...; }`).
+2. die vier wichtigsten **funktionalen Interfaces** aus `java.util.function` (sowie `java.util.Comparator`) sicher unterscheiden:
     - `Predicate<T>` → `boolean test(T)`
     - `Function<T, R>` → `R apply(T)`
     - `Consumer<T>` → `void accept(T)`
     - `Comparator<T>` → `int compare(T, T)`
-3. den Zusammenhang zwischen einem **Lambda-Ausdruck** und dem **funktionalen Interface**, auf das er „passt", verstehen (Target-Typ-Inferenz).
-4. **Methodenreferenzen** (`Book::getPages`, `Comparator.comparingInt(Book::getPages)`) als kompaktere Schreibweise für triviale Lambdas einsetzen können.
-5. eine **manuelle, schleifenbasierte** Implementierung gegen eine **Streams-basierte** Implementierung austauschen können – ohne das öffentliche API zu ändern.
-6. einschätzen können, wann die Streams-API klar besser lesbar ist und wann eine klassische Schleife besser wäre.
+3. den Zusammenhang zwischen einem **Lambda-Ausdruck** und dem **funktionalen Interface**, auf das er „passt", erklären (Target-Typ-Inferenz).
+4. **Methodenreferenzen** (`Book::getPages`, `Comparator.comparingInt(Book::getPages)`) als kompaktere Schreibweise für triviale Lambdas einsetzen.
+5. eine **manuelle, schleifenbasierte** Implementierung gegen eine **Streams-basierte** Implementierung austauschen, ohne das öffentliche API zu ändern.
+6. einschätzen, wann die Streams-API klar besser lesbar ist und wann eine klassische Schleife angemessener wäre.
 
 ## Dateien
 
@@ -49,13 +49,13 @@ Nach Durcharbeiten dieses Beispiels sollen die Studierenden:
 | [src/BookProcessorStreams.java](src/BookProcessorStreams.java) | Implementierung mit der Streams-API. |
 | [src/App.java](src/App.java) | `main`-Methode; baut eine Liste von Büchern auf und führt **dieselben** Abfragen einmal über die manuelle und einmal über die Streams-Implementierung aus. |
 
-## Didaktischer Aufbau (Live-Coding, ~45–60 Minuten)
+## Aufbau des Beispiels
 
-Dieses Beispiel ist bewusst so geschnitten, dass es **in sechs Schritten live vor der Gruppe entwickelt** werden kann. Die Studierenden können dabei jeweils mitcoden:
+Das Beispiel ist in sechs nachvollziehbaren Schritten aufgebaut. Wenn du den Code Schritt für Schritt liest, erkennst du, wie aus einer hardcodierten Schleife Stück für Stück eine wiederverwendbare, lambdabasierte Lösung wird.
 
 ### Schritt 1 – Ausgangspunkt: Hardcodierte Schleife
 
-Zunächst eine schlichte `main`, die alle „teuren" Bücher (Preis > 20 €) aus einer Liste herausfiltert:
+Eine schlichte `main`, die alle „teuren" Bücher (Preis > 20 €) aus einer Liste herausfiltert, sähe so aus:
 
 ```java
 List<Book> expensive = new ArrayList<>();
@@ -66,11 +66,11 @@ for (Book b : books) {
 }
 ```
 
-→ *Frage an die Studierenden:* „Was mache ich morgen, wenn ich alle Bücher mit mehr als 400 Seiten brauche? Klasse duplizieren? Methode duplizieren?" Antwort: Wir bräuchten eine Möglichkeit, die **Bedingung selbst** als Parameter zu übergeben.
+Was passiert, wenn du morgen alle Bücher mit mehr als 400 Seiten brauchst? Methode oder Klasse zu duplizieren ist offensichtlich keine gute Lösung. Was wir brauchen, ist eine Möglichkeit, die **Bedingung selbst** als Parameter zu übergeben.
 
-### Schritt 2 – Eigene anonyme innere Klasse / Predicate einführen
+### Schritt 2 – Anonyme innere Klasse / `Predicate`
 
-Auftritt von `Predicate<Book>`: ein Interface mit einer Methode `boolean test(Book)`. Erst klassisch als anonyme innere Klasse zeigen:
+Genau dafür gibt es `Predicate<Book>`: ein Interface mit einer Methode `boolean test(Book)`. Klassisch als anonyme innere Klasse:
 
 ```java
 Predicate<Book> isExpensive = new Predicate<Book>() {
@@ -81,11 +81,11 @@ Predicate<Book> isExpensive = new Predicate<Book>() {
 };
 ```
 
-→ Sehr verbose. Genau hier setzt die Lambda-Syntax an.
+Das funktioniert – ist aber sehr verbose. Genau hier setzt die Lambda-Syntax an.
 
 ### Schritt 3 – Refactor zur Lambda-Schreibweise
 
-Drei Stufen der Lambda-Verkürzung zeigen:
+Drei Stufen der Lambda-Verkürzung:
 
 ```java
 Predicate<Book> isExpensive = (Book b) -> { return b.getPrice() > 20.0; };
@@ -93,11 +93,11 @@ Predicate<Book> isExpensive = (Book b) -> b.getPrice() > 20.0;
 Predicate<Book> isExpensive = b       -> b.getPrice() > 20.0;
 ```
 
-→ *Erklären:* Der Compiler weiß durch den Target-Typ `Predicate<Book>`, dass `b` ein `Book` sein muss – die Typannotation kann entfallen. Bei einem einzigen Ausdruck kann auch `{ return ... }` weggelassen werden.
+Der Compiler weiß durch den Target-Typ `Predicate<Book>`, dass `b` ein `Book` sein muss – die Typannotation kann entfallen. Bei einem einzigen Ausdruck darf auch `{ return ... }` weggelassen werden.
 
 ### Schritt 4 – `BookProcessor` mit `filter`, `max`, `min`, `mean`
 
-Schleifenbasierten Filter in eine wiederverwendbare Klasse heben:
+Die schleifenbasierte Filterlogik wandert in eine wiederverwendbare Klasse:
 
 ```java
 public List<Book> filter(Predicate<Book> p) {
@@ -111,7 +111,7 @@ public List<Book> filter(Predicate<Book> p) {
 
 Analog `max` und `min` mit `Comparator<Book>` und `mean` mit `Function<Book, Long>`. Wichtig: Die **Schleifenimplementierung** liegt vollständig **innerhalb** der Methode – der Aufrufer sieht nur das funktionale Interface.
 
-→ *Aufrufseitig:*
+Aufrufseitig:
 
 ```java
 processor.filter(b -> b.getPrice() > 20.0);
@@ -121,7 +121,7 @@ processor.mean  (b -> (long) b.getPages());
 
 ### Schritt 5 – Streams-Implementierung
 
-Eine zweite Klasse `BookProcessorStreams` schreiben, die dasselbe Interface erfüllt – aber jede Methode nur eine einzige Stream-Pipeline ist:
+Eine zweite Klasse `BookProcessorStreams` erfüllt dasselbe Interface – jede Methode ist nur eine einzige Stream-Pipeline:
 
 ```java
 public List<Book> filter(Predicate<Book> p) {
@@ -137,11 +137,11 @@ public double mean(Function<Book, Long> f) {
 }
 ```
 
-→ **Wichtiger Transfer zur Übung**: Genauso ist auch der `DataProcessorStreams` aufgebaut. Der Trick ist immer: Stream öffnen → ein- oder mehrere Zwischen­operationen (`filter`, `map`, `mapToLong`, `distinct`, `sorted`) → eine **terminale** Operation (`count`, `max`, `average`, `collect`, `forEach`).
+Genauso ist auch der `DataProcessorStreams` aus der Hausübung aufgebaut. Das Schema ist immer: Stream öffnen → eine oder mehrere Zwischen­operationen (`filter`, `map`, `mapToLong`, `distinct`, `sorted`) → eine **terminale** Operation (`count`, `max`, `average`, `collect`, `forEach`).
 
 ### Schritt 6 – Beide Implementierungen gegeneinander laufen lassen
 
-In `App.java` denselben Block einmal mit `new BookProcessorManual(books)` und einmal mit `new BookProcessorStreams(books)` ausführen:
+In `App.java` wird derselbe Block einmal mit `new BookProcessorManual(books)` und einmal mit `new BookProcessorStreams(books)` ausgeführt:
 
 ```java
 private static void run(BookProcessor processor) {
@@ -156,7 +156,7 @@ private static void run(BookProcessor processor) {
 }
 ```
 
-→ *Aha-Effekt:* Die Methode `run` weiß nicht, ob sie gerade Schleifen oder Streams ausführt – sie kennt nur das Interface. Genau das ist die Trennung von **WAS** (Predicate, Comparator, Function) und **WIE** (Schleifen vs. Streams).
+Die Methode `run` weiß nicht, ob sie gerade Schleifen oder Streams ausführt – sie kennt nur das Interface. Genau das ist die Trennung von **WAS** (Predicate, Comparator, Function) und **WIE** (Schleifen vs. Streams).
 
 ## Ausführen
 
@@ -192,11 +192,11 @@ titles:
 ... identische Ausgabe ...
 ```
 
-Die identische Ausgabe ist beabsichtigt – sie ist der zentrale Beweis dafür, dass beide Implementierungen semantisch äquivalent sind.
+Die identische Ausgabe ist beabsichtigt – sie ist der Beweis dafür, dass beide Implementierungen semantisch äquivalent sind.
 
-## Bezug zur Übung 8
+## Übertragung auf die Übung 8
 
-Dieses Beispiel deckt **alle Konzepte** ab, die für UE08 benötigt werden – aber an einer deutlich kleineren Domäne:
+Dieses Beispiel deckt alle Konzepte ab, die für UE08 benötigt werden – aber an einer kleineren Domäne. Die folgende Tabelle zeigt, wie sich die hier gezeigten Bausteine auf die Hausübung übertragen lassen:
 
 | Konzept | Hier (`Book` / `BookProcessor`) | In der Übung (`HardDisk` / `DataProcessor`) |
 | --- | --- | --- |
@@ -209,15 +209,15 @@ Dieses Beispiel deckt **alle Konzepte** ab, die für UE08 benötigt werden – a
 | `Function<T, R>` | `b -> (long) b.getPages()` | `hdd -> hdd.getCapacityInBytes()` |
 | `Function<T, String>` für Distinct | `Book::getGenre` | `HardDisk::getModel` |
 
-Die Übung verlangt zusätzlich noch:
+In der Hausübung kommen außerdem dazu:
 
-- **Median**-Berechnung über `Comparator` + `Function` kombiniert (`median(...)`).
-- **JUnit-Tests** mit einer `DummyHardDiskDataSource` – dieses Thema ist hier bewusst **nicht** abgedeckt, um die Hausübung nicht vorwegzunehmen.
+- die **Median**-Berechnung über `Comparator` + `Function` kombiniert (`median(...)`),
+- **JUnit-Tests** mit einer `DummyHardDiskDataSource`.
 
-## Diskussions- und Übungsvorschläge
+## Aufgaben zum Vertiefen
 
-- Welche der vier Interfaces (`Predicate`, `Function`, `Consumer`, `Comparator`) hat **keinen** Rückgabewert in seiner Methode? Warum ist das logisch konsistent?
+- Welche der vier Interfaces (`Predicate`, `Function`, `Consumer`, `Comparator`) hat **keinen** Rückgabewert in seiner SAM-Methode? Warum ist das logisch konsistent?
 - Schreibe `Comparator.comparingInt(Book::getPages)` einmal als reine Lambda (`(a, b) -> ...`) und einmal mit `Integer.compare(...)`. Welche der drei Varianten ist am robustesten gegen Overflow?
-- Ergänze in `BookProcessor` eine Methode `median(Comparator<Book>, Function<Book, Long>)` analog zur Hausübung. Wie sieht sie in der Stream-Variante aus?
+- Ergänze in `BookProcessor` eine Methode `median(Comparator<Book>, Function<Book, Long>)`. Wie sieht sie in der Stream-Variante aus?
 - Was ist der Unterschied zwischen `books.stream().forEach(...)` und einer klassischen `for`-Schleife? Welcher der beiden Stile darf parallelisiert werden?
 - Warum liefert `mean()` im Streams-Beispiel `OptionalDouble` und nicht direkt `double`? Was wäre die saubere Behandlung des leeren Falls?
