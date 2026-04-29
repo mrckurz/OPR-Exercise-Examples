@@ -2,7 +2,7 @@
 
 Dieses Beispiel gehört zur Lehrveranstaltung **Objektorientierte Programmierung (OPR)** am Studiengang **Mobile Computing** der **FH OÖ – Campus Hagenberg** (LV-Leitung: FH-Prof. Dr. Marc Kurz).
 
-Es dient als **begleitendes Live-Coding-Beispiel zu Übung 7** (Interfaces, Generics, `Comparable`) und zeigt dieselben Konzepte an einer deutlich kleineren Domäne als `DoubleLinkedList` / `RandomAccessDoubleLinkedList` – damit der Transfer zur Hausübung von den Studierenden selbst geleistet wird.
+Es ergänzt **Übung 7** (Interfaces, Generics, `Comparable`) mit einer deutlich kleineren Domäne als die `DoubleLinkedList` / `RandomAccessDoubleLinkedList` aus der Hausübung. Du siehst die zentralen Sprachfeatures hier in einer überschaubaren Form und kannst das Muster anschließend auf die Hausübung übertragen.
 
 ## Worum geht es?
 
@@ -20,18 +20,18 @@ Damit `min()` und `max()` funktionieren, müssen sich die gespeicherten Werte **
 public class Pair<T extends Comparable<T>> { ... }
 ```
 
-Zusätzlich wird ein eigenes Interface **`MinMaxable<T>`** definiert und von `Pair` implementiert. Das zeigt exakt das Muster, das in der Übung für das Interface `Sortable` gefordert wird: ein generisches Interface mit derselben Bound, das von einer konkreten generischen Klasse implementiert wird.
+Zusätzlich wird ein eigenes Interface **`MinMaxable<T>`** definiert und von `Pair` implementiert. Das ist genau das Muster, das in der Übung für das Interface `Sortable` gefordert ist: ein generisches Interface mit derselben Bound, das von einer konkreten generischen Klasse implementiert wird.
 
 ## Lernziele
 
-Nach Durcharbeiten dieses Beispiels sollen die Studierenden:
+Wenn du dieses Beispiel durchgearbeitet hast, kannst du:
 
-1. die **Grundsyntax generischer Klassen** (`class Pair<T> { ... }`) kennen und wissen, warum Generics besser sind als `Object`-Container mit Casts.
+1. die **Grundsyntax generischer Klassen** (`class Pair<T> { ... }`) anwenden und erklären, warum Generics besser sind als `Object`-Container mit Casts.
 2. den **Bounded Type Parameter** `<T extends Comparable<T>>` verstehen – insbesondere *warum* die Einschränkung nötig ist, sobald innerhalb der Klasse `compareTo()` aufgerufen werden soll.
-3. den Unterschied zwischen den Operatoren `<`, `>`, `==` (nur für primitive Typen) und der Methode **`compareTo()`** (für Objekte) sicher anwenden können.
-4. eine **innere Klasse** (`Pair<T>.Stats`) schreiben können, die den **generischen Typ der äußeren Klasse** mitverwendet – exakt das Muster, das auch für die Klasse `Node` innerhalb von `DoubleLinkedList<T>` benötigt wird.
-5. ein **generisches Interface** (`MinMaxable<T extends Comparable<T>>`) entwerfen und in einer konkreten Klasse implementieren können.
-6. eine eigene Klasse (`Person`) schreiben können, die `Comparable<Person>` implementiert, und damit als Typ-Argument in ein `Pair<Person>` eingesetzt werden kann.
+3. den Unterschied zwischen den Operatoren `<`, `>`, `==` (nur für primitive Typen) und der Methode **`compareTo()`** (für Objekte) sicher anwenden.
+4. eine **innere Klasse** (`Pair<T>.Stats`) schreiben, die den **generischen Typ der äußeren Klasse** mitverwendet – exakt dasselbe Muster, das auch für die Klasse `Node` innerhalb von `DoubleLinkedList<T>` benötigt wird.
+5. ein **generisches Interface** (`MinMaxable<T extends Comparable<T>>`) entwerfen und in einer konkreten Klasse implementieren.
+6. eine eigene Klasse (`Person`) schreiben, die `Comparable<Person>` implementiert, und damit als Typ-Argument in ein `Pair<Person>` einsetzen.
 
 ## Dateien
 
@@ -42,13 +42,13 @@ Nach Durcharbeiten dieses Beispiels sollen die Studierenden:
 | [src/Person.java](src/Person.java) | Beispielklasse, die `Comparable<Person>` implementiert (Vergleich nach Alter). Dient als Typ-Argument in der Demo. |
 | [src/App.java](src/App.java) | `main`-Methode; erzeugt `Pair<Integer>`, `Pair<String>`, `Pair<Person>` und demonstriert `min`/`max`/`swap`/`Stats`. |
 
-## Didaktischer Aufbau (Live-Coding, ~45–60 Minuten)
+## Aufbau des Beispiels
 
-Dieses Beispiel ist bewusst so geschnitten, dass es **in sechs Schritten live vor der Gruppe entwickelt** werden kann. Die Studierenden können dabei jeweils mitcoden:
+Das Beispiel ist in sechs nachvollziehbaren Schritten aufgebaut. Wenn du den Code Schritt für Schritt liest, erkennst du, wie aus einer nicht-generischen Klasse Stück für Stück eine generische Lösung mit Bounded Type Parameter und eigenem Interface wird.
 
 ### Schritt 1 – Ausgangspunkt: `IntPair` (nicht-generisch)
 
-Zunächst eine Klasse `IntPair` mit zwei `int`-Feldern und den Methoden `min()`, `max()`, `swap()` schreiben. Hier funktioniert der Vergleich noch mit `<` und `>`.
+Eine Klasse `IntPair` mit zwei `int`-Feldern und den Methoden `min()`, `max()`, `swap()`. Der Vergleich funktioniert hier noch problemlos mit `<` und `>`:
 
 ```java
 public int min() {
@@ -56,23 +56,23 @@ public int min() {
 }
 ```
 
-→ *Frage an die Studierenden:* „Was passiert, wenn ich morgen statt `int` auch `String` in dieser Struktur speichern möchte?" Antwort: Man müsste die ganze Klasse duplizieren.
+Was passiert, wenn du dieselbe Struktur morgen für `String`, `Double` oder eine eigene Klasse `Person` brauchst? Die ganze Klasse zu duplizieren wäre offensichtlich keine gute Lösung. Die Antwort liefern Generics.
 
 ### Schritt 2 – Refactor zu `Pair<T>` (noch ohne Bound)
 
-`int` durch `T` ersetzen, Klasse als `public class Pair<T> { ... }` deklarieren.
+`int` wird durch `T` ersetzt und die Klasse als `public class Pair<T> { ... }` deklariert.
 
-→ **Der Compiler schlägt an**: `first < second` geht nicht mehr, weil `<` nur für primitive Typen definiert ist. Auch `first.compareTo(second)` schlägt fehl, weil für `T` nichts bekannt ist – `Object` kennt keine `compareTo`-Methode.
+Der Compiler schlägt jetzt allerdings an: `first < second` funktioniert nicht mehr, weil `<` nur für primitive Typen definiert ist. Auch `first.compareTo(second)` schlägt fehl, weil für `T` nichts bekannt ist – `Object` kennt keine `compareTo`-Methode.
 
 ### Schritt 3 – Bounded Type Parameter einführen
 
-Die Typvariable einschränken:
+Die Typvariable wird eingeschränkt:
 
 ```java
 public class Pair<T extends Comparable<T>> { ... }
 ```
 
-Und die Vergleiche auf `compareTo()` umstellen:
+Und die Vergleiche werden auf `compareTo()` umgestellt:
 
 ```java
 public T min() {
@@ -80,11 +80,11 @@ public T min() {
 }
 ```
 
-→ Der Compiler ist zufrieden. Erklären, *warum*: Durch die Bound garantiert der Compiler, dass jedes Typ-Argument, das für `T` eingesetzt wird, eine `compareTo`-Methode mitbringt.
+Jetzt ist der Compiler zufrieden: Durch die Bound garantiert er, dass jedes Typ-Argument, das für `T` eingesetzt wird, eine `compareTo`-Methode mitbringt.
 
 ### Schritt 4 – Innere Klasse `Stats` mit demselben `T`
 
-Innerhalb von `Pair<T>` die innere Klasse `Stats` anlegen. Sie nutzt `T` aus der äußeren Klasse, ohne `T` selbst nochmal in eckigen Klammern zu deklarieren:
+Innerhalb von `Pair<T>` wird die innere Klasse `Stats` angelegt. Sie nutzt `T` aus der äußeren Klasse, ohne `T` selbst nochmal in eckigen Klammern zu deklarieren:
 
 ```java
 public class Stats {
@@ -94,11 +94,11 @@ public class Stats {
 }
 ```
 
-→ **Wichtiger Transfer zur Übung**: Genau so ist auch `Node` innerhalb von `DoubleLinkedList<T>` zu implementieren – die innere Klasse erbt den generischen Typ der äußeren Klasse.
+Genau dasselbe Muster brauchst du in der Hausübung für die Klasse `Node` innerhalb von `DoubleLinkedList<T>` – die innere Klasse erbt den generischen Typ der äußeren Klasse.
 
 ### Schritt 5 – Interface `MinMaxable<T>` und Implementierung
 
-Das Interface schreiben:
+Ein eigenes generisches Interface:
 
 ```java
 public interface MinMaxable<T extends Comparable<T>> {
@@ -108,9 +108,9 @@ public interface MinMaxable<T extends Comparable<T>> {
 }
 ```
 
-`Pair<T>` um `implements MinMaxable<T>` ergänzen und `@Override` vor `min` / `max` / `isEqual` setzen.
+`Pair<T>` wird um `implements MinMaxable<T>` ergänzt und mit `@Override` vor `min` / `max` / `isEqual` versehen.
 
-→ **Wichtiger Transfer zur Übung**: Exakt dieses Muster wird für das Interface `Sortable<T extends Comparable<T>>` und die Klasse `SortableList<T extends Comparable<T>> extends RandomAccessDoubleLinkedList<T> implements Sortable<T>` benötigt.
+Genau dieses Muster brauchst du in der Hausübung für das Interface `Sortable<T extends Comparable<T>>` und die Klasse `SortableList<T extends Comparable<T>> extends RandomAccessDoubleLinkedList<T> implements Sortable<T>`.
 
 ### Schritt 6 – Einsatz in `App.java`
 
@@ -159,9 +159,9 @@ stats.equal = false
 after swap: Pair[first=5, second=42]
 ```
 
-## Bezug zur Übung 7
+## Übertragung auf die Übung 7
 
-Dieses Beispiel deckt **alle Konzepte** ab, die für UE07 benötigt werden – aber an einer deutlich kleineren Domäne:
+Dieses Beispiel deckt alle Konzepte ab, die für UE07 benötigt werden – aber an einer kleineren Domäne. Die folgende Tabelle zeigt, wie sich die hier gezeigten Bausteine auf die Hausübung übertragen lassen:
 
 | Konzept | Hier (`Pair`) | In der Übung (`DoubleLinkedList` / `SortableList`) |
 | --- | --- | --- |
@@ -171,15 +171,15 @@ Dieses Beispiel deckt **alle Konzepte** ab, die für UE07 benötigt werden – a
 | Generisches Interface mit Bound | `MinMaxable<T extends Comparable<T>>` | `Sortable<T extends Comparable<T>>` |
 | Klasse implementiert generisches Interface | `Pair<T> implements MinMaxable<T>` | `SortableList<T> extends RADLL<T> implements Sortable<T>` |
 
-Die Übung verlangt zusätzlich noch:
+In der Hausübung kommen außerdem dazu:
 
-- **Vererbung** zwischen generischen Klassen (`SortableList<T> extends RandomAccessDoubleLinkedList<T>`) – dieses Thema ist hier bewusst **nicht** abgedeckt, um die Hausübung nicht vorwegzunehmen.
-- **Zwei konkrete Sortieralgorithmen** (`sortAscending`, `sortDescending`) auf der Listenstruktur.
+- **Vererbung** zwischen generischen Klassen (`SortableList<T> extends RandomAccessDoubleLinkedList<T>`),
+- zwei konkrete **Sortieralgorithmen** (`sortAscending`, `sortDescending`) auf der Listenstruktur.
 
-## Diskussions- und Übungsvorschläge
+## Aufgaben zum Vertiefen
 
 - Warum würde `Pair<T>` ohne die Bound `extends Comparable<T>` nicht kompilieren, sobald `compareTo()` in der Klasse aufgerufen wird? Was genau meldet der Compiler?
-- Was würde passieren, wenn man versucht, ein `Pair<Object>` zu erzeugen? Warum lässt der Compiler das nicht zu?
+- Was würde passieren, wenn du versuchst, ein `Pair<Object>` zu erzeugen? Warum lässt der Compiler das nicht zu?
 - Ergänze `Pair<T>` um eine Methode `contains(T value)`, die prüft, ob `value` einem der beiden gespeicherten Elemente gleich ist (`compareTo(...) == 0`).
 - Erweitere `MinMaxable<T>` um eine Methode `median()` – lässt sie sich für `Pair<T>` überhaupt sinnvoll implementieren? Und was passiert, wenn das Interface später auch von einer Klasse mit drei oder mehr Werten implementiert werden soll?
 - Schreibe eine zweite `Comparable`-Klasse (z. B. `Product` mit Preis als Vergleichskriterium) und verwende sie in einem neuen `Pair<Product>`.
