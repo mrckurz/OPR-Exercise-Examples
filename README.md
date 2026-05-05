@@ -21,6 +21,7 @@ Jedes Beispiel liegt auf einem eigenen **Branch**, damit die Beispiele klar vone
 | `exception-example` | Einführungsbeispiel zu Exceptions und der Definition eigener Exception-Klassen | UE06 |
 | `generics-example` | Generics, Bounded Type Parameter (`<T extends Comparable<T>>`), generisches Interface und innere Klasse mit generischem Typ – illustriert am Beispiel `Pair<T>` | UE07 |
 | `lambda-example` | Lambda-Ausdrücke und funktionale Interfaces (`Predicate`, `Function`, `Comparator`, `Consumer`) sowie der Vergleich einer schleifenbasierten und einer Streams-API-basierten Implementierung – illustriert am Beispiel `Book` / `BookProcessor` | UE08 |
+| `javafx-example` | Erstes JavaFX-Beispiel: `BorderPane`/`GridPane`-Layout, MVC-Trennung, Property Binding, FXML-Komponente mit Controller und CSS-Styling – illustriert am Beispiel `Tic-Tac-Toe` | UE09 |
 
 Weitere Beispiele werden im Laufe der Lehrveranstaltung auf zusätzlichen Branches ergänzt.
 
