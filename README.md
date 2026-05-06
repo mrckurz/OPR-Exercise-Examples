@@ -113,7 +113,3 @@ java  --module-path <JFX> --add-modules javafx.controls,javafx.fxml -cp bin tict
 - **Game → New Game** setzt das Brett zurück.
 - **Game → Exit** schließt das Fenster.
 - Bei Sieg oder Unentschieden öffnet sich automatisch ein Dialog.
-
-## Lehrende: Live-Coding-Schummelzettel
-
-Der schrittweise Aufbau dieses Projekts (für UE09 Live-Coding) ist im internen Schummelzettel `ue09/exercise-step-by-step.pdf` dokumentiert.
