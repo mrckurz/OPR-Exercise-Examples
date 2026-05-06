@@ -1,5 +1,11 @@
 bin/
 lib/
+target/
 .DS_Store
 .vscode/
+.idea/
+*.iml
+.classpath
+.project
+.settings/
 *.class

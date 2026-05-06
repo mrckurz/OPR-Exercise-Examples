@@ -15,97 +15,61 @@ Begleitbeispiel zur **UE09** der Lehrveranstaltung *Objektorientierte Programmie
 ## Projektstruktur
 
 ```
-src/tictactoe/
-├── App.java                  # Application, Menü, Wiring, Game-Over-Dialog
-├── Game.java                 # Spiellogik + Properties
-├── GameState.java            # enum: RUNNING / WON / DRAW
-├── Player.java               # enum: X / O / NONE
-├── BoardPane.java            # GridPane mit 9 Buttons, reagiert auf Properties
-├── StatusBarController.java  # FXML-Controller mit StringBindings
-├── StatusBar.fxml            # FXML-Definition der Statusleiste
-└── board.css                 # Styling für Board, Zellen, Statusleiste
+pom.xml                                     # Maven-Projektbeschreibung
+src/main/java/tictactoe/
+├── App.java                                # Application, Menü, Wiring, Game-Over-Dialog
+├── Game.java                               # Spiellogik + Properties
+├── GameState.java                          # enum: RUNNING / WON / DRAW
+├── Player.java                             # enum: X / O / NONE
+├── BoardPane.java                          # GridPane mit 9 Buttons, reagiert auf Properties
+└── StatusBarController.java                # FXML-Controller mit StringBindings
+src/main/resources/tictactoe/
+├── StatusBar.fxml                          # FXML-Definition der Statusleiste
+└── board.css                               # Styling für Board, Zellen, Statusleiste
 ```
 
 ## Voraussetzungen
 
-- JDK 17 oder neuer (https://adoptium.net)
-- JavaFX SDK 17 oder neuer, entpackt in einem stabilen Verzeichnis (https://openjfx.io)
-  - macOS:  `/Users/<name>/javafx-sdk-21`
-  - Windows:`C:\javafx-sdk-21`
-  - Linux:  `~/javafx-sdk-21`
+- **JDK 17 oder neuer** (https://adoptium.net) — z.&nbsp;B. Eclipse Temurin 17 oder 21.
+- Sonst **nichts**. Maven wird über den mitgelieferten Wrapper (`mvnw` / `mvnw.cmd`) automatisch in der richtigen Version geholt, JavaFX wird beim ersten Build von Maven Central heruntergeladen. Du musst keine JavaFX-SDK-ZIP von Hand herunterladen oder Pfade konfigurieren.
 
-Im Folgenden steht `<JFX>` als Platzhalter für deinen Pfad zum entpackten `javafx-sdk/lib`-Ordner.
+## Schnellstart (alle Plattformen)
 
-## Variante A — VS Code
-
-1. Repo klonen, Branch wechseln, Ordner in VS Code öffnen:
-   ```bash
-   git clone https://github.com/mrckurz/OPR-Exercise-Examples.git
-   cd OPR-Exercise-Examples
-   git checkout javafx-example
-   code .
-   ```
-2. **Extension Pack for Java** installieren (falls noch nicht vorhanden).
-3. Lege `.vscode/settings.json` mit folgendem Inhalt an (Pfad anpassen):
-   ```json
-   {
-     "java.project.sourcePaths": ["src"],
-     "java.project.outputPath":  "bin",
-     "java.project.referencedLibraries": [
-       "<JFX>/*.jar"
-     ]
-   }
-   ```
-4. Lege `.vscode/launch.json` an, damit JavaFX die richtigen Module bekommt:
-   ```json
-   {
-     "version": "0.2.0",
-     "configurations": [
-       {
-         "type": "java",
-         "name": "Tic-Tac-Toe",
-         "request": "launch",
-         "mainClass": "tictactoe.App",
-         "vmArgs": "--module-path <JFX> --add-modules javafx.controls,javafx.fxml"
-       }
-     ]
-   }
-   ```
-5. **Run** → Konfiguration „Tic-Tac-Toe" wählen → ▶︎.
-
-Alternativ direkt im Terminal (kompilieren + starten ohne IDE-Wizard):
 ```bash
-javac --module-path <JFX> --add-modules javafx.controls,javafx.fxml -d bin src/tictactoe/*.java
-cp src/tictactoe/StatusBar.fxml src/tictactoe/board.css bin/tictactoe/
-java  --module-path <JFX> --add-modules javafx.controls,javafx.fxml -cp bin tictactoe.App
+git clone https://github.com/mrckurz/OPR-Exercise-Examples.git
+cd OPR-Exercise-Examples
+git checkout javafx-example
+
+# macOS / Linux
+./mvnw javafx:run
+
+# Windows
+mvnw.cmd javafx:run
 ```
 
-## Variante B — IntelliJ IDEA
+Beim ersten Aufruf lädt der Wrapper Maven + JavaFX-Artefakte herunter (~30 Sekunden). Danach öffnet sich das Spielfenster.
 
-1. **File → Open…** den Repo-Ordner wählen, anschließend Branch `javafx-example` über die VCS-Leiste auschecken.
-2. **File → Project Structure… → Project**: SDK auf JDK 17+ setzen, Language Level entsprechend.
-3. **File → Project Structure… → Modules → Sources**: `src` als *Sources Root* markieren.
-4. **File → Project Structure… → Libraries → +**: `<JFX>` (den `lib`-Ordner) als Java-Library hinzufügen und dem Modul zuordnen.
-5. **Run → Edit Configurations… → + → Application**:
-   - *Main class:* `tictactoe.App`
-   - *Modify options → Add VM options*:
-     ```
-     --module-path <JFX> --add-modules javafx.controls,javafx.fxml
-     ```
-6. ▶︎ Run.
+## In der IDE öffnen
 
-## Variante C — Eclipse
+Alle drei IDEs erkennen das Projekt am `pom.xml` selbständig — keine manuellen Bibliotheks- oder VM-Optionen nötig.
 
-1. **File → Import… → Git → Projects from Git** → Repo + Branch `javafx-example` auswählen → **Import as general project**.
-2. Rechtsklick auf das Projekt → **Configure → Convert to Java Project**.
-3. Rechtsklick → **Properties → Java Build Path → Source**: `src` als Source-Folder hinzufügen (falls nicht automatisch erkannt).
-4. **Properties → Java Build Path → Libraries → Classpath → Add External JARs…**: alle `.jar`-Dateien aus `<JFX>` hinzufügen.
-5. Rechtsklick auf `App.java` → **Run As → Run Configurations…**:
-   - Tab *Arguments* → **VM arguments**:
-     ```
-     --module-path <JFX> --add-modules javafx.controls,javafx.fxml
-     ```
-6. ▶︎ Run.
+### VS Code
+
+1. **Extension Pack for Java** installieren (falls noch nicht vorhanden).
+2. Ordner in VS Code öffnen → das Java-Plugin importiert das Maven-Projekt automatisch.
+3. Im **Maven**-Tab links: `tictactoe-javafx → Plugins → javafx → javafx:run` doppelklicken.
+4. Alternativ in `App.java` über dem `main` auf **Run** klicken.
+
+### IntelliJ IDEA
+
+1. **File → Open…** → den Repo-Ordner wählen → IntelliJ erkennt `pom.xml` und importiert das Projekt.
+2. Im **Maven**-Toolfenster (rechts): `tictactoe-javafx → Plugins → javafx → javafx:run` doppelklicken.
+3. Alternativ: Rechtsklick auf `App.java` → **Run 'App.main()'**.
+
+### Eclipse
+
+1. **File → Import… → Maven → Existing Maven Projects** → den Repo-Ordner wählen → Finish.
+2. Rechtsklick auf das Projekt → **Run As → Maven build…** → im Feld *Goals* `javafx:run` eintragen → Run.
 
 ## Bedienung
 
@@ -113,3 +77,16 @@ java  --module-path <JFX> --add-modules javafx.controls,javafx.fxml -cp bin tict
 - **Game → New Game** setzt das Brett zurück.
 - **Game → Exit** schließt das Fenster.
 - Bei Sieg oder Unentschieden öffnet sich automatisch ein Dialog.
+
+## Was macht Maven hier eigentlich?
+
+Maven liest `pom.xml`, lädt die JavaFX-Artefakte aus Maven Central und ruft `javac` / `java` mit den korrekten `--module-path`- und `--add-modules`-Argumenten auf. Wer das von Hand machen will, kann jederzeit:
+
+```bash
+./mvnw clean compile
+java --module-path ~/.m2/repository/org/openjfx/javafx-controls/21.0.4 \
+     --add-modules javafx.controls,javafx.fxml \
+     -cp target/classes tictactoe.App
+```
+
+— aber genau diesen Boilerplate nimmt einem Maven ab.
