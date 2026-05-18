@@ -1,5 +1,8 @@
 bin/
 lib/
+target/
 .DS_Store
 .vscode/
+.idea/
+*.iml
 *.class
